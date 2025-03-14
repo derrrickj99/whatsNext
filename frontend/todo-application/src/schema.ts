@@ -7,7 +7,9 @@ const TaskSchema = z.object(
         taskDescription: z.string(),
         taskId: z.string().nonempty({ message: "No Task ID found!" }),
         priority: z.string({ invalid_type_error: "Invalid Priority Number" }),
-        dueDate: z.date(),
+
+        //FIX! Date should be of a particular string format. (dd/MM/yyyy) as per date-fns
+        dueDate: z.string(),
         duration: z.number().max(2, { message: "Task duration is too long! (Max: 2)" }),
         status: z.boolean()
     }

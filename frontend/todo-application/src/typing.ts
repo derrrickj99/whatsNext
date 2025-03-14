@@ -5,6 +5,6 @@ export type Task = {
     taskGroup: string,
     priority: string,
     duration: number,
-    dueDate: Date,
+    dueDate: string,
     status: boolean
 }
