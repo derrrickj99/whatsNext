@@ -24,7 +24,7 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Link } from 'react-router'
 import { useAppDispatch } from '@/store/hooks'
@@ -39,6 +39,7 @@ const TASK_GROUP_LIST_DUMMY = [
 const AddTaskPage = () => {
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
+  const [calenderOpen, setCalendarOpen] = useState(false)
   const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
@@ -47,13 +48,20 @@ const AddTaskPage = () => {
       taskDescription: '',
       taskGroup: '',
       duration: 1,
-      dueDate: new Date(),
+      dueDate: format(new Date(), 'dd/MM/yyyy'),
       priority: '1',
       status: false
     }
   })
 
-  function submitHandler (values: z.infer<typeof TaskSchema>) { 
+  function handleDateSelect (date: Date | undefined) {
+    if (!date) return
+    const formattedDate = format(date, 'dd/MM/yyyy')
+    form.setValue('dueDate', formattedDate)
+    setCalendarOpen(false)
+  }
+  /// FIX!: Add new task has an issue on adding. Date format problem
+  function submitHandler (values: z.infer<typeof TaskSchema>) {
     dispatch(addTask(values))
   }
   return (
@@ -161,7 +169,7 @@ const AddTaskPage = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Due Date</FormLabel>
-              <Popover>
+              <Popover open={calenderOpen} onOpenChange={setCalendarOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -171,7 +179,7 @@ const AddTaskPage = () => {
                         !field.value && 'text-muted-foreground'
                       )}
                     >
-                      {field.value ? format(field.value, 'PPP') : 'Pick a date'}
+                      {field.value ? field.value : 'Pick a date'}
                       <span className='material-symbols-outlined'>
                         calendar_month
                       </span>
@@ -182,11 +190,13 @@ const AddTaskPage = () => {
                   <PopoverContent className='w-auto p-0' align='start'>
                     <Calendar
                       mode='single'
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={date =>
-                        date > new Date() || date < new Date('1900-01-01')
+                      selected={
+                        field.value
+                          ? new Date(field.value.split('/').reverse().join('-'))
+                          : undefined
                       }
+                      onSelect={date => handleDateSelect(date)}
+                      disabled={date => date < new Date()}
                       initialFocus
                     />
                   </PopoverContent>
@@ -210,7 +220,7 @@ const AddTaskPage = () => {
             </FormItem>
           )}
         />
-        
+
         <div className='pt-3 w-full flex items-center justify-center gap-2'>
           <Button className='w-full' type='submit'>
             {loading ? 'Loading. Please Wait...' : 'Add'}
