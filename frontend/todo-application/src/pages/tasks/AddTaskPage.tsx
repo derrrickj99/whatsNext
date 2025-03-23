@@ -24,7 +24,7 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
-import { format, parse } from 'date-fns'
+import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { Link } from 'react-router'
 import { useAppDispatch } from '@/store/hooks'
@@ -38,7 +38,6 @@ const TASK_GROUP_LIST_DUMMY = [
 ]
 const AddTaskPage = () => {
   const dispatch = useAppDispatch()
-  const [loading, setLoading] = useState(false)
   const [calenderOpen, setCalendarOpen] = useState(false)
   const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
@@ -54,14 +53,14 @@ const AddTaskPage = () => {
     }
   })
 
-  function handleDateSelect (date: Date | undefined) {
+  function handleDateSelect(date: Date | undefined) {
     if (!date) return
     const formattedDate = format(date, 'dd/MM/yyyy')
     form.setValue('dueDate', formattedDate)
     setCalendarOpen(false)
   }
   /// FIX!: Add new task has an issue on adding. Date format problem
-  function submitHandler (values: z.infer<typeof TaskSchema>) {
+  function submitHandler(values: z.infer<typeof TaskSchema>) {
     dispatch(addTask(values))
   }
   return (
@@ -114,8 +113,8 @@ const AddTaskPage = () => {
                     >
                       {field.value
                         ? TASK_GROUP_LIST_DUMMY.find(
-                            language => language.value === field.value
-                          )?.label
+                          language => language.value === field.value
+                        )?.label
                         : 'Select language'}
                       <span className='material-symbols-outlined'>
                         unfold_more
@@ -223,7 +222,7 @@ const AddTaskPage = () => {
 
         <div className='pt-3 w-full flex items-center justify-center gap-2'>
           <Button className='w-full' type='submit'>
-            {loading ? 'Loading. Please Wait...' : 'Add'}
+            Add
           </Button>
           <Link to='/' className='w-full'>
             <Button className='w-full' variant={'destructive'}>
