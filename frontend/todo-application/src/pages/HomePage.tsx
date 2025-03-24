@@ -6,9 +6,17 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Link } from 'react-router'
+import { useAppSelector } from '@/store/hooks'
+import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router'
 
-export default function HomePage () {
+export default function HomePage() {
+  const session = useAppSelector((state) => state.user).sessionId != ""
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!session)
+      navigate('/login')
+  }, [session])
   return (
     <div className='flex flex-col gap-3 items-center justify-start p-3'>
       <div className='p-2 w-full flex item-center justify-start border border-purple-500 rounded-lg'>

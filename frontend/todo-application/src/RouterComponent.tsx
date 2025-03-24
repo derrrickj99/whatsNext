@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import TasksPage from "./pages/tasks/TasksPage";
 import AddTaskPage from "./pages/tasks/AddTaskPage";
 import EditTaskPage from "./pages/tasks/EditTaskPage";
+import LoginPage from "./pages/auth/LoginPage";
 
 export default function RouterComponent() {
     return (
@@ -14,6 +15,7 @@ export default function RouterComponent() {
             <Routes>
                 <Route path="/" element={<App />}>
                     <Route index element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="tasks">
                         <Route index element={<TasksPage />} />
                         <Route path="add" element={<AddTaskPage />} />

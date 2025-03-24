@@ -8,3 +8,13 @@ export type Task = {
     dueDate: string,
     status: boolean
 }
+export type UserLogin = {
+    email: string,
+    password: string
+}
+export type User = {
+    username: string,
+    userId: string,
+    sessionId: string,
+    role: "admin" | "dev" | "user"
+}
